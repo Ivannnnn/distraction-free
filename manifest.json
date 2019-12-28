@@ -3,21 +3,23 @@
   "description": "DistractionFree is a chrome extension that effectively shaves off the attention-sucking parts of these applications.",
   "version": "0.1.0",
   "manifest_version": 2,
-  "permissions": ["storage"],
+  "permissions": ["storage", "tabs"],
   "options_page": "options/index.html",
   "browser_action": {},
-  "background": { 
-    "scripts": ["background.js"] 
+  "background": {
+    "scripts": ["background.js"]
   },
   "content_scripts": [
     {
       "matches": ["https://*.twitter.com/*"],
-      "js": ["twitterScript.js"],
+      "js": ["contentScript.js"],
+      "css": ["contentStyles.css"],
       "run_at": "document_start"
     },
     {
-      "matches": ["https://*.reddit.com/"],
-      "js": ["redditScript.js"],
+      "matches": ["https://*.reddit.com/*"],
+      "js": ["contentScript.js"],
+      "css": ["styles/reddit.css"],
       "run_at": "document_start"
     }
   ]

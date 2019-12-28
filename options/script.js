@@ -37,6 +37,8 @@ const createElements = (h => {
 })(h)
 const { div, label, h2, input } = createElements
 
+
+
 class Field extends Component {
   render() {
     return div([
@@ -60,7 +62,7 @@ class Options extends Component {
       options: {}
     }
 
-    chrome.storage.sync.get('options', ({ options }) => {
+    chrome.storage.sync.get('options', ({ options = {} }) => {
       this.setState({ options, loaded: true })
     })
   }
@@ -77,6 +79,16 @@ class Options extends Component {
       () => chrome.storage.sync.set({ options: this.state.options })
     )
   }
+
+/*
+  posts: '.rpBJOHq2PR60pnwJlUyP0',
+  growing_communities: '._3RPJ8hHnfFohktLZca18J6',
+  premium: '._1G4yU68P50vRZ4USXfaceV',
+  trending: '._2j6XpwwZyn7dNcfH7Blz0B',
+  recent: '._3Im6OD67aKo33nql4FpSp_'
+*/
+
+
 
   render() {
     const { reddit, twitter } = this.state.options
