@@ -4,22 +4,35 @@
   "version": "0.1.0",
   "manifest_version": 2,
   "permissions": ["storage", "tabs"],
-  "options_page": "options/index.html",
   "browser_action": {},
+  "options_page": "./src/options/index.html",
   "background": {
-    "scripts": ["background.js"]
+    "scripts": ["./dist/background.js"]
   },
   "content_scripts": [
     {
-      "matches": ["https://*.twitter.com/*"],
-      "js": ["contentScript.js"],
-      "css": ["contentStyles.css"],
+      "matches": ["https://*.reddit.com/*"],
+      "js": ["./dist/contentScripts/reddit.js"],
       "run_at": "document_start"
     },
     {
-      "matches": ["https://*.reddit.com/*"],
-      "js": ["contentScript.js"],
-      "css": ["styles/reddit.css"],
+      "matches": ["https://*.twitter.com/*"],
+      "js": ["./dist/contentScripts/twitter.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://*.facebook.com/*"],
+      "js": ["./dist/contentScripts/facebook.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://*.youtube.com/*"],
+      "js": ["./dist/contentScripts/youtube.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://*.linkedin.com/*"],
+      "js": ["./dist/contentScripts/linkedin.js"],
       "run_at": "document_start"
     }
   ]

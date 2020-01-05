@@ -35,11 +35,9 @@ const createElements = (h => {
     }
   )
 })(h)
-const { div, label, h2, input } = createElements
+const { div, label, h2, h3, input } = createElements
 
-
-
-class Field extends Component {
+class Option extends Component {
   render() {
     return div([
       label([
@@ -54,6 +52,36 @@ class Field extends Component {
   }
 }
 
+const defaultOptions = {
+  reddit: {
+    newfeed: false,
+    growing_communities: false,
+    premium: false,
+    trending: false,
+    recent: false
+  },
+  twitter: {
+    newfeed: false,
+    who_to_follow: false,
+    trending: false
+  },
+  facebook: {
+    newsfeed: false,
+    group_recommendations: false
+    //ads: false
+  },
+  youtube: {
+    recommended: false,
+    up_next: false,
+    related: false,
+    comments: false,
+    ads: false
+  },
+  linkedin: {
+    newsfeed: false
+  }
+}
+
 class Options extends Component {
   constructor() {
     super()
@@ -63,44 +91,51 @@ class Options extends Component {
     }
 
     chrome.storage.sync.get('options', ({ options = {} }) => {
-      this.setState({ options, loaded: true })
+      this.setState({
+        loaded: true,
+        options: {
+          reddit: { ...defaultOptions.reddit, ...options.reddit },
+          facebook: { ...defaultOptions.facebook, ...options.facebook },
+          twitter: { ...defaultOptions.twitter, ...options.twitter },
+          youtube: { ...defaultOptions.youtube, ...options.youtube },
+          linkedin: { ...defaultOptions.linkedin, ...options.linkedin }
+        }
+      })
     })
   }
 
-  onChange(option, checked) {
+  onChange(host, option, checked) {
     this.setState(
       {
         ...this.state,
         options: {
           ...this.state.options,
-          [option]: checked
+          [host]: {
+            ...this.state.options[host],
+            [option]: checked
+          }
         }
       },
       () => chrome.storage.sync.set({ options: this.state.options })
     )
   }
 
-/*
-  posts: '.rpBJOHq2PR60pnwJlUyP0',
-  growing_communities: '._3RPJ8hHnfFohktLZca18J6',
-  premium: '._1G4yU68P50vRZ4USXfaceV',
-  trending: '._2j6XpwwZyn7dNcfH7Blz0B',
-  recent: '._3Im6OD67aKo33nql4FpSp_'
-*/
-
-
-
   render() {
-    const { reddit, twitter } = this.state.options
-
     return (
       this.state.loaded &&
       div([
         h2('Options'),
-        h(Field, {
-          label: 'Twitter',
-          checked: twitter,
-          onChange: c => this.onChange('twitter', c)
+        Object.keys(this.state.options).map(host => {
+          return div([
+            h3(host),
+            ...Object.keys(this.state.options[host]).map(option => {
+              return h(Option, {
+                label: option,
+                checked: this.state.options[host][option],
+                onChange: c => this.onChange(host, option, c)
+              })
+            })
+          ])
         })
       ])
     )
